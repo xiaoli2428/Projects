@@ -1,0 +1,56 @@
+"""Application settings and environment configuration."""
+import os
+from typing import Optional, List
+from dataclasses import dataclass, field
+from functools import lru_cache
+
+
+@dataclass
+class Settings:
+    """Application settings."""
+    # API Settings
+    api_host: str = "0.0.0. 0"
+    api_port: int = 8000
+    debug: bool = False
+    
+    # JWT Settings
+    jwt_secret_key: str = field(default_factory=lambda: os.getenv("JWT_SECRET_KEY", "your-secret-key-change-in-production"))
+    jwt_algorithm: str = "HS256"
+    jwt_expiration_hours: int = 24
+    
+    # Web3 Settings
+    default_network: str = "ethereum"
+    infura_api_key: Optional[str] = field(default_factory=lambda: os.getenv("INFURA_API_KEY"))
+    alchemy_api_key: Optional[str] = field(default_factory=lambda: os.getenv("ALCHEMY_API_KEY"))
+    
+    # Database Settings
+    database_url: str = field(default_factory=lambda: os.getenv("DATABASE_URL", "sqlite:///./web3_app.db"))
+    
+    # Redis Settings (for caching and real-time)
+    redis_url: str = field(default_factory=lambda: os.getenv("REDIS_URL", "redis://localhost:6379"))
+    
+    # IPFS Settings
+    ipfs_gateway: str = "https://ipfs.io/ipfs/"
+    pinata_api_key: Optional[str] = field(default_factory=lambda: os.getenv("PINATA_API_KEY"))
+    pinata_secret_key: Optional[str] = field(default_factory=lambda: os.getenv("PINATA_SECRET_KEY"))
+    
+    # Notification Settings
+    smtp_host: Optional[str] = field(default_factory=lambda: os.getenv("SMTP_HOST"))
+    smtp_port: int = 587
+    smtp_user: Optional[str] = field(default_factory=lambda: os.getenv("SMTP_USER"))
+    smtp_password: Optional[str] = field(default_factory=lambda: os. getenv("SMTP_PASSWORD"))
+    
+    # Rate Limiting
+    rate_limit_requests: int = 100
+    rate_limit_window: int = 60  # seconds
+    
+    # Supported networks
+    supported_networks: List[str] = field(default_factory=lambda: [
+        "ethereum", "bsc", "polygon", "arbitrum", "optimism", "avalanche", "fantom", "base"
+    ])
+
+
+@lru_cache()
+def get_settings() -> Settings:
+    """Get cached settings instance."""
+    return Settings()
