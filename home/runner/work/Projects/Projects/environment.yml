@@ -1,0 +1,6 @@
+name: myenv
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - <your-python-package-dependencies>
